@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:logger_export/logger_export.dart';
 
-final log = LoggerExport(color: false);
+final log =
+    LoggerExport(color: false, writeLogToFile: true, writeLogToConsole: true);
 
 void main() {
   runApp(const MyApp());
