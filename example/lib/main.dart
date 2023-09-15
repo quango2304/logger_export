@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger_export/logger_export.dart';
 
 final log =
-    LoggerExport(color: false, writeLogToFile: true, writeLogToConsole: true);
+    LoggerExport(color: true, writeLogToFile: true, writeLogToConsole: true);
 
 void main() {
   runApp(const MyApp());
@@ -126,8 +126,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
                 onPressed: () async {
                   final logFile = await log.getLogFile();
+                  print("logFile ${logFile?.path}");
                 },
-                child: const Text("export log file"))
+                child: const Text("export log file")),
+            ElevatedButton(
+                onPressed: () async {
+                  final logFile = await log.clearLogFile();
+                },
+                child: const Text("clear log file"))
           ],
         ),
       ),

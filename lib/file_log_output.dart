@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:logger/logger.dart';
 
 class FileLogOutput extends LogOutput {
@@ -23,7 +24,7 @@ class FileLogOutput extends LogOutput {
   @override
   void output(OutputEvent event) {
     if (writeLogToConsole) {
-      event.lines.forEach(print);
+      event.lines.forEach(debugPrint);
     }
     if (writeLogToFile) {
       for (var msg in event.lines) {

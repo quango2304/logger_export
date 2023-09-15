@@ -18,10 +18,12 @@ abstract class ELogInterface {
     StackTrace? stackTrace,
   });
 
-  Future<File> getLogFile();
+  Future<File?> getLogFile();
+
+  Future<void> clearLogFile();
 }
 
-class LoggerExport {
+class LoggerExport implements ELogInterface{
   late Logger _logger;
   final _completer = Completer();
 
@@ -57,6 +59,7 @@ class LoggerExport {
     _completer.complete();
   }
 
+  @override
   d(
     dynamic message, {
     StackTrace? stackTrace,
@@ -65,17 +68,24 @@ class LoggerExport {
     _logger.d("$_time $message", stackTrace: stackTrace);
   }
 
+  @override
   e(
     Object? error, {
     dynamic message,
     StackTrace? stackTrace,
   }) async {
     await _completer.future;
-    _logger.e("$_time $message", error: error, stackTrace: stackTrace);
+    _logger.e("$_time [ERROR] $message", error: error, stackTrace: stackTrace);
   }
 
-  Future<File> getLogFile() async {
-    return File(await _getLogFilePath());
+  @override
+  Future<File?> getLogFile() async {
+    final logFile =  File(await _getLogFilePath());
+    if(logFile.existsSync()) {
+      return logFile;
+    } else {
+      return null;
+    }
   }
 
   Future<String> _getLogFilePath() async {
@@ -86,5 +96,13 @@ class LoggerExport {
   String get _time {
     final time = DateTime.now();
     return "${time.day}-${time.month} ${time.hour}:${time.minute}:${time.second}";
+  }
+
+  @override
+  Future<void> clearLogFile() async {
+    final logFile =  File(await _getLogFilePath());
+    if(logFile.existsSync()) {
+      logFile.writeAsString("");
+    }
   }
 }
