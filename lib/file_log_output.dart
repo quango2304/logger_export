@@ -1,6 +1,5 @@
 import 'dart:io';
-
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 
 class FileLogOutput extends LogOutput {
@@ -12,14 +11,19 @@ class FileLogOutput extends LogOutput {
   @override
   Future<void> init() async {
     super.init();
+    initIOSink();
+  }
+
+  void initIOSink() {
     final logFile = File(logFilePath);
     fileIOSink = logFile.openWrite(mode: FileMode.append);
   }
 
-  FileLogOutput(
-      {required this.writeLogToConsole,
-        required this.writeLogToFile,
-        required this.logFilePath});
+  FileLogOutput({
+    required this.writeLogToConsole,
+    required this.writeLogToFile,
+    required this.logFilePath,
+  });
 
   @override
   void output(OutputEvent event) {

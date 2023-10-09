@@ -23,39 +23,39 @@ abstract class ELogInterface {
   Future<void> clearLogFile();
 }
 
-class LoggerExport implements ELogInterface{
+class LoggerExport implements ELogInterface {
   late Logger _logger;
   final _completer = Completer();
+  late FileLogOutput _fileLogOutput;
 
   LoggerExport(
       {bool writeLogToFile = true,
       bool writeLogToConsole = true,
-      bool color = true,
       int errorMethodCount = 4}) {
     _init(
         writeLogToFile: writeLogToFile,
         writeLogToConsole: writeLogToConsole,
-        color: color,
         errorMethodCount: errorMethodCount);
   }
 
   Future<void> _init(
       {bool writeLogToFile = true,
       bool writeLogToConsole = true,
-      bool color = true,
       int errorMethodCount = 4}) async {
     final logFilePath = await _getLogFilePath();
+    _fileLogOutput = FileLogOutput(
+        writeLogToConsole: writeLogToConsole,
+        writeLogToFile: writeLogToFile,
+        logFilePath: logFilePath);
     _logger = Logger(
-        printer: PrettyPrinter(
-            noBoxingByDefault: true,
-            methodCount: 0,
-            printEmojis: false,
-            colors: color,
-            errorMethodCount: errorMethodCount),
-        output: FileLogOutput(
-            writeLogToConsole: writeLogToConsole,
-            writeLogToFile: writeLogToFile,
-            logFilePath: logFilePath));
+      printer: PrettyPrinter(
+          noBoxingByDefault: true,
+          methodCount: 0,
+          printEmojis: false,
+          colors: false,
+          errorMethodCount: errorMethodCount),
+      output: _fileLogOutput,
+    );
     _completer.complete();
   }
 
@@ -80,8 +80,8 @@ class LoggerExport implements ELogInterface{
 
   @override
   Future<File?> getLogFile() async {
-    final logFile =  File(await _getLogFilePath());
-    if(logFile.existsSync()) {
+    final logFile = File(await _getLogFilePath());
+    if (logFile.existsSync()) {
       return logFile;
     } else {
       return null;
@@ -100,9 +100,11 @@ class LoggerExport implements ELogInterface{
 
   @override
   Future<void> clearLogFile() async {
-    final logFile =  File(await _getLogFilePath());
-    if(logFile.existsSync()) {
-      logFile.writeAsString("");
+    final logFile = File(await _getLogFilePath());
+    if (logFile.existsSync()) {
+      await logFile.delete();
+      await logFile.create();
+      _fileLogOutput.initIOSink();
     }
   }
 }
