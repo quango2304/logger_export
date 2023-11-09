@@ -55,6 +55,7 @@ class LoggerExport implements ELogInterface {
           colors: false,
           errorMethodCount: errorMethodCount),
       output: _fileLogOutput,
+      filter: ProductionFilter()
     );
     _completer.complete();
   }

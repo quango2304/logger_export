@@ -1,6 +1,6 @@
 name: logger_export
 description: flutter log
-version: 0.1.0
+version: 0.2.0
 homepage: https://github.com/quango2304/logger_export
 
 environment:

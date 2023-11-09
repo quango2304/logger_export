@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger_export/logger_export.dart';
+import 'package:share_plus/share_plus.dart';
 
 final log =
     LoggerExport(writeLogToFile: true, writeLogToConsole: true);
@@ -126,6 +127,11 @@ class _MyHomePageState extends State<MyHomePage> {
             ElevatedButton(
                 onPressed: () async {
                   final logFile = await log.getLogFile();
+                  if(logFile != null) {
+                    Share.shareXFiles([
+                      XFile(logFile.path)
+                    ]);
+                  }
                   print("logFile ${logFile?.path}");
                 },
                 child: const Text("export log file")),
