@@ -137,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: const Text("export log file")),
             ElevatedButton(
                 onPressed: () async {
-                  final logFile = await log.clearLogFile();
+                  await log.clearLogFile();
                 },
                 child: const Text("clear log file"))
           ],
